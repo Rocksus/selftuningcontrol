@@ -10,7 +10,7 @@ angle = double(nan(1, samples));
 pwm = double(nan(1, samples));
 time = double(nan(1, samples));
 
-s1 = serial("COM4"); %Insert com port here
+s1 = serial('COM9'); %Insert com port here
 
 set(s1, 'baudrate', 115200);     % See List Below
 set(s1, 'parity', 'n');        % 'n' or 'y'
@@ -19,12 +19,13 @@ set(s1, 'timeout', 123);     % 12.3 Seconds as an example here
 
 fopen(s1);
 
+subplot(2,1,1);
 plotGraph = plot(time, angle, '-r');
-hold on
+subplot(2,1,2);
 plotGraph1 = plot(time, pwm, '-b');
-title('Test');
-xlabel('time');
-ylabel('potentio');
+title('Motor Control');
+xlabel('Time');
+%ylabel('potentio');
 
 flushinput(s1);
 
@@ -33,9 +34,9 @@ for x=1:samples
     time(x) = toc;
     
     angle(x) = fscanf(s1, '%d\n');
-    set_param('Model/Angle','Value',num2str(angle(x))) %send a to the model
+    set_param('Model/AngleInput','Value',num2str(angle(x))) %send a to the model
     pwm(x) = fscanf(s1, '%d\n');
-    set_param('Model/Throttle','Value',num2str(pwm(x))) %send a to the model
+    set_param('Model/ThrottleInput','Value',num2str(pwm(x))) %send a to the model
     
 
     set(plotGraph, 'XData', time, 'YData', angle);
@@ -45,10 +46,6 @@ for x=1:samples
     pause(0.1); %frequency
 end
 
-%for x=1:samples
-%
-%
-%end
-set_param('tesloopsimin', 'SimulationCommand', 'stop');
+set_param('Model', 'SimulationCommand', 'stop');
 fclose(s1);
 delete(s1);
