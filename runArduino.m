@@ -46,7 +46,7 @@ for x=1:samples
     subplot(2,1,2);
     set(plotGraph, 'XData', time, 'YData', angle);
     
-    fprintf('%.2f\n', throttleOutput);    
+    %fprintf('%.2f\n', throttleOutput);    
     
     pause(0.1); %frequency
 end
